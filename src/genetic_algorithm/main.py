@@ -4,11 +4,12 @@ items = {
     1: 2,   2: 10,  3: 8,   4: 5,   5: 3,  
     6: 12,  7: 2,   8: 6,   9: 15,  10: 7,  
     11: 4,  12: 9,  13: 1,  14: 11, 15: 14,
-    16: 13, 17: 3,  18: 5,  19: 4,  20: 8, 30: 3
+    16: 13, 17: 3,  18: 30,  19: 4,  20: 8, 21: 21, 22: 23, 30: 3, 
 }
 
 max_weight = 20
 optimal_fitness = 45
+population_size = 10000
 
 class Individual:
     def __init__(self, genes=None):
@@ -30,16 +31,16 @@ def crossover(parent1, parent2):
     crossover_point = random.randint(1, len(parent1.genes) - 1)
     child_genes = parent1.genes[:crossover_point] + parent2.genes[crossover_point:]
     
-    if random.random() < 0.01:  
+    if random.random() < 0.01 / (population_size / 2):  
         mutate_index = random.randint(0, len(child_genes) - 1)
-        child_genes[mutate_index] = 1 - child_genes[mutate_index]
+        child_genes[mutate_index] = 1 if child_genes[mutate_index] == 0 else 0
     
     return Individual(child_genes)
 
 def tournament_selection(population):
     return max(random.sample(population, 2), key=lambda ind: ind.fitness)
 
-population = [Individual() for _ in range(100000)]
+population = [Individual() for _ in range(population_size)]
 generation = 0
 
 current_best_coeff = 0.0
